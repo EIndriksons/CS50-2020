@@ -1,19 +1,24 @@
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
---[[
-    Screen size for that retro look (16:9 aspect ratio)
-]]
 VIRTUAL_WIDTH = 432
 VIRTUAL_HEIGHT = 243
 
-push = require 'push'               -- Library that handles screen rendering
+push = require 'push'
 
 --[[
     Runs when the game first starts up, only once; used to initialize the game.
 ]]
 function love.load()
-    love.graphics.setDefaultFilter('nearest', 'nearest') -- To prevent blurry font due to resizing, we must change screen filtering
+    love.graphics.setDefaultFilter('nearest', 'nearest')
+
+    -- more "retro-looking" font object we can use for any text
+    smallFont = love.graphics.newFont('font.ttf', 8)
+
+    -- set LOVE's active font to the smallFont object
+    love.graphics.setFont(smallFont)
+
+    -- initialize window with virtual resolution
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
         vsync = true,
@@ -21,7 +26,11 @@ function love.load()
     })
 end
 
-function love.keypressed(key)       -- Handles when a key is pressed
+--[[
+    Keyboard handling, called by LOVE each frame;
+    passes in the key we pressed so we can access.
+]]
+function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()
     end
@@ -31,14 +40,26 @@ end
     Called after update by LOVE, used to draw anything to the screen, updated or otherwise.
 ]]
 function love.draw()
-    push:apply('start')             -- Switch ON for push screen rendering
 
-    love.graphics.printf(
-        "Hello Pong!",              -- Text to render
-        0,                          -- starting X (0 since we're going to center it based on width)
-        VIRTUAL_HEIGHT / 2 - 6,     -- starting Y (halfway down the screen)
-        VIRTUAL_WIDTH,              -- number of pixels to center within (the entire screen here)
-        'center')                   -- alignment mode, can be 'center', 'left', or 'right'
+    -- begin rendering at virtual resolution
+    push:apply('start')
 
-    push:apply('end')               -- Switch OFF for push screen rendering
+    -- clear the screen with a specific color; in this case, a color similar
+    -- to some versions of the original Pong
+    love.graphics.clear(40 / 255, 45 / 255, 52 / 255, 255 / 255)
+
+    -- draw welcome text toward the top of the screen
+    love.graphics.printf("Hello Pong!", 0, 20, VIRTUAL_WIDTH, 'center')
+
+    -- render first paddle (left side)
+    love.graphics.rectangle('fill', 5, 20, 5, 20)
+
+    -- render second paddle (right side)
+    love.graphics.rectangle('fill', VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 40, 5, 20)
+
+    -- render ball (center)
+    love.graphics.rectangle('fill', VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)    
+
+    -- end rendering at virtual resolution
+    push:apply('end')
 end
