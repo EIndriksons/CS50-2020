@@ -1,4 +1,4 @@
-# Harvard CS50 - 2020 SOME solutions
+# Harvard CS50 - 2020 solutions for Tracks
 
 The following files are my solutions to the Harvard's CS50's Introduction to Computer Science course on [edX](https://courses.edx.org/courses/course-v1:HarvardX+CS50+X/course/) and are to be used only to showcase my portfolio to potential employers, universities or other entities.
 
@@ -6,3 +6,4 @@ If you are a student of this course - please see the Course guidelines on [Acade
 
 ## Table of Contents
 - [Games](/games)
+  * [Pong](/games/pong)
