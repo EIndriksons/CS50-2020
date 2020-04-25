@@ -1,3 +1,17 @@
+--[[
+    This is CS50 2019.
+    Games Track
+    Pong
+
+    -- Paddle Class --
+
+    Author: Colton Ogden
+    cogden@cs50.harvard.edu
+
+    Represents a paddle that can move up and down. Used in the main
+    program to deflect the ball back toward the opponent.
+]]
+
 Paddle = Class{}
 
 --[[
@@ -33,7 +47,7 @@ function Paddle:update(dt)
     -- height (or else it will go partially below, since position is
     -- based on its top left corner)
     else
-        self.y = math.min(VIRTUAL_HEIGHT - 20, self.y + self.dy * dt)
+        self.y = math.min(VIRTUAL_HEIGHT - self.height, self.y + self.dy * dt)
     end
 end
 

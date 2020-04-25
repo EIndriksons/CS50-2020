@@ -1,3 +1,18 @@
+--[[
+    This is CS50 2019.
+    Games Track
+    Pong
+
+    -- Ball Class --
+
+    Author: Colton Ogden
+    cogden@cs50.harvard.edu
+
+    Represents a ball which will bounce back and forth between paddles
+    and walls until it passes a left or right boundary of the screen,
+    scoring a point for the opponent.
+]]
+
 Ball = Class{}
 
 function Ball:init(x, y, width, height)
@@ -8,24 +23,24 @@ function Ball:init(x, y, width, height)
 
     -- these variables are for keeping track of our velocity on both the
     -- X and Y axis, since the ball can move in two dimensions
-    self.dx = math.random(2) == 1 and -100 or 100
-    self.dy = math.random(-50, 50)
+    self.dy = math.random(2) == 1 and -100 or 100
+    self.dx = math.random(2) == 1 and math.random(-80, -100) or math.random(80, 100)
 end
 
 --[[
     Expects a paddle as an argument and returns true or false, depending
     on whether their rectangles overlap.
 ]]
-function Ball:collides(box)
+function Ball:collides(paddle)
     -- first, check to see if the left edge of either is farther to the right
     -- than the right edge of the other
-    if self.x > box.x + box.width or box.x > self.x + self.width then
+    if self.x > paddle.x + paddle.width or paddle.x > self.x + self.width then
         return false
     end
 
     -- then check to see if the bottom edge of either is higher than the top
     -- edge of the other
-    if self.y > box.y + box.height or box.y > self.y + self.height then
+    if self.y > paddle.y + paddle.height or paddle.y > self.y + self.height then
         return false
     end 
 
@@ -40,8 +55,8 @@ end
 function Ball:reset()
     self.x = VIRTUAL_WIDTH / 2 - 2
     self.y = VIRTUAL_HEIGHT / 2 - 2
-    self.dx = math.random(2) == 1 and -100 or 100
-    self.dy = math.random(-50, 50)
+    self.dy = math.random(2) == 1 and -100 or 100
+    self.dx = math.random(-50, 50)
 end
 
 --[[
@@ -53,5 +68,5 @@ function Ball:update(dt)
 end
 
 function Ball:render()
-    love.graphics.rectangle('fill', self.x, self.y, 4, 4)
+    love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
 end
