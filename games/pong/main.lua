@@ -59,11 +59,20 @@ function love.load()
     player1Score = 0
     player2Score = 0
 
+    -- randomly chooses serving player
+    servingPlayer = math.random(2) == 1 and 1 or 2
+    
     -- initialize player paddles and ball
     player1 = Paddle(5, 20, 5, 20)
     player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 30, 5, 20)
     ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
 
+    -- assigns first ball direction to the serving player
+    if servingPlayer == 1 then
+        ball.dx = 100
+    else
+        ball.dx = -100
+    end
 
     -- game state variable used to transition between different parts of the game
     -- (used for beginning, menus, main game, high scorle list, etc.)
@@ -82,14 +91,18 @@ function love.update(dt)
 
         if ball.x <= 0 then
             player2Score = player2Score + 1
+            servingPlayer = 1
             ball:reset()
-            gameState = 'start'
+            ball.dx = 100
+            gameState = 'serve'
         end
 
         if ball.x >= VIRTUAL_WIDTH - 4 then
             player1Score = player1Score + 1
+            servingPlayer = 2
             ball:reset()
-            gameState = 'start'
+            ball.dx = -100
+            gameState = 'serve'
         end
 
         -- detect ball collision with paddles, reversing dx if true and
@@ -151,12 +164,16 @@ end
     passes in the key we pressed so we can access.
 ]]
 function love.keypressed(key)
+
     if key == 'escape' then
         love.event.quit()
+
     -- if we press enter during either the start or serve phase, it should
     -- transition to the next appropriate state
     elseif key == 'enter' or key == 'return' then
         if gameState == 'start' then
+            gameState = 'serve'
+        elseif gameState == 'serve' then
             gameState = 'play'
         end
     end
@@ -176,6 +193,14 @@ function love.draw()
 
     -- draw different things based on the state of the game
     love.graphics.setFont(smallFont)
+
+    if gameState == 'start' then
+        love.graphics.printf("Welcome to Pong!", 0, 20, VIRTUAL_WIDTH, 'center')
+        love.graphics.printf("Press Enter to Play!", 0, 32, VIRTUAL_WIDTH, 'center')
+    elseif gameState == 'serve' then
+        love.graphics.printf("Player " .. tostring(servingPlayer) .. "'s turn!", 0, 20, VIRTUAL_WIDTH, 'center')
+        love.graphics.printf("Press Enter to Serve!", 0, 32, VIRTUAL_WIDTH, 'center')
+    end
 
     -- draw score on the left and right center of the screen
     -- need to swith font to draw before actually printing
