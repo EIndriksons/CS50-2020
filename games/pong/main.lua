@@ -58,8 +58,8 @@ function love.load()
     player2Score = 0
 
     -- initialize player paddles and ball
-    paddle1 = Paddle(5, 20, 5, 20)
-    paddle2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 30, 5, 20)
+    player1 = Paddle(5, 20, 5, 20)
+    player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 30, 5, 20)
     ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
 
 
@@ -76,25 +76,45 @@ end
 ]]
 function love.update(dt)
 
-    paddle1:update(dt)
-    paddle2:update(dt)
+    -- detect ball collision with paddles, reversing dx if true and
+    -- slightly increasing it, then altering the dy based on the position of collision
+    if ball:collides(player1) then
+        -- deflect ball to the right
+        ball.dx = -ball.dx
+    end
+
+    if ball:collides(player2) then
+        -- deflect ball to the left
+        ball.dx = -ball.dx
+    end
+
+    if ball.y <= 0 then
+        -- deflect ball down
+        ball.dy = -ball.dy
+        ball.y = 0
+    end
+
+    if ball.y >= VIRTUAL_HEIGHT - 4 then
+        ball.dy = -ball.dy
+        ball.y = VIRTUAL_HEIGHT - 4
+    end
 
     -- player 1 movement
     if love.keyboard.isDown('w') then
-        paddle1.dy = -PADDLE_SPEED
+        player1.dy = -PADDLE_SPEED
     elseif love.keyboard.isDown('s') then
-        paddle1.dy = PADDLE_SPEED
+        player1.dy = PADDLE_SPEED
     else
-        paddle1.dy = 0
+        player1.dy = 0
     end
 
     -- player 2 movement
     if love.keyboard.isDown('up') then
-        paddle2.dy = -PADDLE_SPEED
+        player2.dy = -PADDLE_SPEED
     elseif love.keyboard.isDown('down') then
-        paddle2.dy = PADDLE_SPEED
+        player2.dy = PADDLE_SPEED
     else
-        paddle2.dy = 0
+        player2.dy = 0
     end
 
     -- update our ball based on its DX and DY only if we're in play state;
@@ -102,6 +122,10 @@ function love.update(dt)
     if gameState == 'play' then
         ball:update(dt)
     end
+
+    player1:update(dt)
+    player2:update(dt)
+
 end
 
 --[[
@@ -151,8 +175,8 @@ function love.draw()
     love.graphics.print(player2Score, VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 3)
 
     -- render paddles, now using their class render method
-    paddle1:render()
-    paddle2:render()
+    player1:render()
+    player2:render()
 
     -- render ball using its class render method
     ball:render()
