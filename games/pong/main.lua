@@ -37,6 +37,8 @@ function love.load()
     -- important for a nice crisp, 2D look
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
+    love.window.setTitle('Pong')
+
     -- "seed" the RNG so that calls to random are always random
     -- use the current time, since that will vary on startup every time
     math.randomseed(os.time())
@@ -76,27 +78,43 @@ end
 ]]
 function love.update(dt)
 
-    -- detect ball collision with paddles, reversing dx if true and
-    -- slightly increasing it, then altering the dy based on the position of collision
-    if ball:collides(player1) then
-        -- deflect ball to the right
-        ball.dx = -ball.dx
-    end
+    if gameState == 'play' then
 
-    if ball:collides(player2) then
-        -- deflect ball to the left
-        ball.dx = -ball.dx
-    end
+        if ball.x <= 0 then
+            player2Score = player2Score + 1
+            ball:reset()
+            gameState = 'start'
+        end
 
-    if ball.y <= 0 then
-        -- deflect ball down
-        ball.dy = -ball.dy
-        ball.y = 0
-    end
+        if ball.x >= VIRTUAL_WIDTH - 4 then
+            player1Score = player1Score + 1
+            ball:reset()
+            gameState = 'start'
+        end
 
-    if ball.y >= VIRTUAL_HEIGHT - 4 then
-        ball.dy = -ball.dy
-        ball.y = VIRTUAL_HEIGHT - 4
+        -- detect ball collision with paddles, reversing dx if true and
+        -- slightly increasing it, then altering the dy based on the position of collision
+        if ball:collides(player1) then
+            -- deflect ball to the right
+            ball.dx = -ball.dx
+        end
+
+        if ball:collides(player2) then
+            -- deflect ball to the left
+            ball.dx = -ball.dx
+        end
+
+        if ball.y <= 0 then
+            -- deflect ball down
+            ball.dy = -ball.dy
+            ball.y = 0
+        end
+
+        if ball.y >= VIRTUAL_HEIGHT - 4 then
+            ball.dy = -ball.dy
+            ball.y = VIRTUAL_HEIGHT - 4
+        end
+
     end
 
     -- player 1 movement
@@ -140,9 +158,6 @@ function love.keypressed(key)
     elseif key == 'enter' or key == 'return' then
         if gameState == 'start' then
             gameState = 'play'
-        elseif gameState == 'play' then
-            gameState = 'start'
-            ball:reset()
         end
     end
 end
@@ -161,12 +176,6 @@ function love.draw()
 
     -- draw different things based on the state of the game
     love.graphics.setFont(smallFont)
-
-    if gameState == 'start' then
-        love.graphics.printf("Hello Start State!", 0, 20, VIRTUAL_WIDTH, 'center')
-    else
-        love.graphics.printf("Hello Play State!", 0, 20, VIRTUAL_WIDTH, 'center')
-    end
 
     -- draw score on the left and right center of the screen
     -- need to swith font to draw before actually printing
