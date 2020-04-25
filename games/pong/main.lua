@@ -48,6 +48,12 @@ function love.load()
     scoreFont = love.graphics.newFont('font.ttf', 32)
     victoryFont = love.graphics.newFont('font.ttf', 24)
 
+    sounds = {
+        ['paddle_hit'] = love.audio.newSource('paddle_hit.wav', 'static'),
+        ['point_scored'] = love.audio.newSource('point_scored.wav', 'static'),
+        ['wall_hit'] = love.audio.newSource('wall_hit.wav', 'static')
+    }
+
     -- initialize window with virtual resolution
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
@@ -93,6 +99,9 @@ function love.update(dt)
 
         if ball.x <= 0 then
             player2Score = player2Score + 1
+
+            sounds['point_scored']:play()
+
             servingPlayer = 1
             ball:reset()
 
@@ -107,6 +116,9 @@ function love.update(dt)
 
         if ball.x >= VIRTUAL_WIDTH - 4 then
             player1Score = player1Score + 1
+
+            sounds['point_scored']:play()
+
             servingPlayer = 2
             ball:reset()
             if player1Score >= 10 then
@@ -123,22 +135,32 @@ function love.update(dt)
         if ball:collides(player1) then
             -- deflect ball to the right
             ball.dx = -ball.dx
+
+            sounds['paddle_hit']:play()
+
         end
 
         if ball:collides(player2) then
             -- deflect ball to the left
             ball.dx = -ball.dx
+
+            sounds['paddle_hit']:play()
+
         end
 
         if ball.y <= 0 then
             -- deflect ball down
             ball.dy = -ball.dy
             ball.y = 0
+
+            sounds['wall_hit']:play()
         end
 
         if ball.y >= VIRTUAL_HEIGHT - 4 then
             ball.dy = -ball.dy
             ball.y = VIRTUAL_HEIGHT - 4
+
+            sounds['wall_hit']:play()
         end
 
     end
