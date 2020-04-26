@@ -12,7 +12,6 @@ VIRTUAL_WIDTH = 432
 VIRTUAL_HEIGHT = 243
 
 
-
 function love.load()
 
     math.randomseed(os.time())

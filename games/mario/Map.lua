@@ -1,4 +1,5 @@
 require 'Util'
+require 'Player'
 
 Map = Class{}
 
@@ -29,6 +30,8 @@ function Map:init()
     self.mapWidth = 30
     self.mapHeight = 28
     self.tiles = {}
+
+    self.player = Player(self)
 
     -- camera offsets
     self.camX = 0
@@ -133,6 +136,8 @@ function Map:update(dt)
         -- right movement
         self.camX = math.min(self.mapWidthPixels - VIRTUAL_WIDTH, math.floor(self.camX + dt * SCROLL_SPEED))
     end
+
+    self.player:update(dt)
 end
 
 -- returns an integer value for the tile at a given x-y coordinate
@@ -152,4 +157,6 @@ function Map:render()
                 (x - 1) * self.tileWidth, (y - 1) * self.tileHeight)
         end
     end
+
+    self.player:render()
 end
