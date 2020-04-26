@@ -11,10 +11,14 @@ WINDOW_HEIGHT = 720
 VIRTUAL_WIDTH = 432
 VIRTUAL_HEIGHT = 243
 
--- an object to contain our map
-map = Map()
+
 
 function love.load()
+
+    math.randomseed(os.time())
+
+    -- an object to contain our map
+    map = Map()
 
     -- makes upscaling look pixel-y instead of blurry
     love.graphics.setDefaultFilter('nearest', 'nearest')
