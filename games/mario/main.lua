@@ -1,12 +1,13 @@
 Class = require 'class'
 push = require 'push'
-require 'Util'
+
 require 'Map'
 
 -- actual window resolution
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
+-- close resolution to NES but 16:9
 VIRTUAL_WIDTH = 432
 VIRTUAL_HEIGHT = 243
 
@@ -36,7 +37,7 @@ function love.draw()
     -- begin virtual resolution drawing
     push:apply('start')
 
-    love.graphics.translate(math.floor(-map.camX), math.floor(-map.camY))
+    love.graphics.translate(-map.camX, -map.camY)
 
     -- clear screen using Mario background blue
     love.graphics.clear(108/255, 140/255, 255/255, 255)

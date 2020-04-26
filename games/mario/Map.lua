@@ -1,3 +1,5 @@
+require 'Util'
+
 Map = Class{}
 
 TILE_BRICK = 1
@@ -13,11 +15,15 @@ function Map:init()
     self.mapHeight = 28
     self.tiles = {}
 
+    -- camera offsets
     self.camX = 0
-    self.camY = 0
+    self.camY = -3
 
     -- generate a quad (individual frame/sprite) for each tile
     self.tileSprite = generateQuads(self.spritesheet, self.tileWidth, self.tileHeight)
+
+    self.mapWidthPixels = self.mapWidth * self.tileWidth
+    self.mapHeightPixels = self.mapHeight * self.tileHeight
 
     -- filling the map with empty tiles
     for y = 1, self.mapHeight do 
@@ -35,7 +41,19 @@ function Map:init()
 end
 
 function Map:update(dt)
-    self.camX = self.camX + SCROLL_SPEED * dt
+    if love.keyboard.isDown('w') then
+        -- up movement
+        self.camY = math.max(0, math.floor(self.camY + dt * -SCROLL_SPEED))
+    elseif love.keyboard.isDown('a') then
+        -- left movement
+        self.camX = math.max(0, math.floor(self.camX + dt * -SCROLL_SPEED))
+    elseif love.keyboard.isDown('s') then
+        -- down movement
+        self.camY = math.min(self.mapHeightPixels - VIRTUAL_HEIGHT, math.floor(self.camY + dt * SCROLL_SPEED))
+    elseif love.keyboard.isDown('d') then
+        -- right movement
+        self.camX = math.min(self.mapWidthPixels - VIRTUAL_WIDTH, math.floor(self.camX + dt * SCROLL_SPEED))
+    end
 end
 
 -- returns an integer value for the tile at a given x-y coordinate
