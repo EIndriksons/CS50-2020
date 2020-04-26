@@ -28,11 +28,34 @@ function love.load()
         resizable = false,
         vsync = true
     })
+
+    love.keyboard.keysPressed = {}
 end
 
- 
+-- called whenever a key is pressed
+function love.keypressed(key)
+    if key == 'escape' then
+        love.event.quit()
+    end
+
+    love.keyboard.keysPressed[key] = true
+end
+
+
+-- global key pressed function
+function love.keyboard.wasPressed(key)
+    if (love.keyboard.keysPressed[key]) then
+        return true
+    else
+        return false
+    end
+end
+
+
 function love.update(dt)
     map:update(dt)
+
+    love.keyboard.keysPressed = {}
 end
 
 
