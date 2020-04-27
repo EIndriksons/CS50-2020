@@ -40,6 +40,7 @@ function Map:init()
 
     -- generate a quad (individual frame/sprite) for each tile
     self.tileSprite = generateQuads(self.spritesheet, self.tileWidth, self.tileHeight)
+    self.music = love.audio.newSource('sounds/music.wav', 'static')
 
     self.mapWidthPixels = self.mapWidth * self.tileWidth
     self.mapHeightPixels = self.mapHeight * self.tileHeight
@@ -121,6 +122,11 @@ function Map:init()
             x = x + 2
         end
     end
+
+    -- start background music
+    self.music:setLooping(true)
+    self.music:setVolume(0.25)
+    self.music:play()
 end
 
 -- return whether a given tile is collidable
