@@ -20,6 +20,7 @@ MUSHROOM_BOTTOM = 11
 
 -- jump block
 JUMP_BLOCK = 5
+JUMP_BLOCK_HIT = 9
 
 local SCROLL_SPEED = 62
 
@@ -128,6 +129,15 @@ function Map:update(dt)
             math.min(self.mapWidthPixels - VIRTUAL_WIDTH, self.player.x)))
 
     self.player:update(dt)
+end
+
+-- gets the tile type at a given pixel coordinate
+function Map:tileAt(x, y)
+    return {
+        x = math.floor(x / self.tileWidth) + 1,
+        y = math.floor(y / self.tileHeight) + 1,
+        id = self:getTile(math.floor(x / self.tileWidth) + 1, math.floor(y / self.tileHeight) + 1)
+    }
 end
 
 -- returns an integer value for the tile at a given x-y coordinate
