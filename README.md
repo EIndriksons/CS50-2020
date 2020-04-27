@@ -6,4 +6,7 @@ If you are a student of this course - please see the Course guidelines on [Acade
 
 ## Table of Contents
 - [Games](/games)
-  * [Pong](/games/pong)
+  * [Pong](/games/pong) - Old school Pong in Lua (setup, classes, basic collision)
+  * [Mario](/games/mario) - Old school Mario in Lua (controls, procedural map generation, movement, animations, collisions)
+- [Android](/android)
+  * [Pokedex](/android/pokedex)
