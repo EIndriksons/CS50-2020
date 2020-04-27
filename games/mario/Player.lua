@@ -64,7 +64,8 @@ function Player:init(map)
                 self.direction = 'right'
             else
                 self.animation = self.animations['idle']
-                -- self.dx = 0
+                self.state = 'idle'
+                self.dx = 0
             end
         end,
         ['walking'] = function(dt)
@@ -82,7 +83,21 @@ function Player:init(map)
                 self.direction = 'right'
             else
                 self.animation = self.animations['idle']
-                -- self.dx = 0
+                self.state = 'idle'
+                self.dx = 0
+            end
+
+            -- chjeck for collisions moving left and right
+            self:checkRightCollision()
+            self:checkLeftCollision()
+
+            -- check if there's a tile directly beneath us
+            if not self.map:collides(self.map:tileAt(self.x, self.y + self.height)) and
+                not self.map:collides(self.map:tileAt(self.x + self.width - 1, self.y + self.height)) then
+
+                -- if so, reset velocity and position and change
+                self.state = 'jumping'
+                self.animation = self.animations['jumping']
             end
         end,
         ['jumping'] = function(dt)
@@ -102,8 +117,51 @@ function Player:init(map)
                 self.state = 'idle'
                 self.animation = self.animations[self.state]
             end
+
+            -- check if there's a tile directly beneath us
+            if not self.map:collides(self.map:tileAt(self.x, self.y + self.height)) and
+                not self.map:collides(self.map:tileAt(self.x + self.width - 1, self.y + self.height)) then
+
+                -- if so, reset velocity and position and change
+                self.dy = 0
+                self.state = 'idle'
+                self.animation = self.animations['idle']
+                self.y = (self.map:tileAt(self.x, self.y + self.height).y - 1) * self.map.tileHeight - self.height
+            end
+
+            -- check for collisions moving left and right
+            self:checkRightCollision()
+            self:checkLeftCollision()
         end
     }
+end
+
+-- checks two tiles to our left to see if a collision occurred
+function Player:checkLeftCollision()
+    if self.dx < 0 then
+        -- check if there's a tile directly beneath us
+        if self.map:collides(self.map:tileAt(self.x - 1, self.y)) or
+            self.map:collides(self.map:tileAt(self.x - 1, self.y + self.height - 1)) then
+            
+            -- if so, reset velocity and position and change state
+            self.dx = 0
+            self.x = self.map:tileAt(self.x - 1, self.y).x * self.map.tileWidth
+        end
+    end
+end
+
+-- checks two tiles to our right to see if a collision occurred
+function Player:checkRightCollision()
+    if self.dx > 0 then
+        -- check if there's a tile directly beneath us
+        if self.map:collides(self.map:tileAt(self.x + self.width, self.y)) or
+            self.map:collides(self.map:tileAt(self.x + self.width, self.y + self.height - 1)) then
+            
+            -- if so, reset velocity and position and change state
+            self.dx = 0
+            self.x = (self.map:tileAt(self.x + self.width, self.y).x - 1) * self.map.tileWidth - self.width
+        end
+    end
 end
 
 function Player:update(dt)

@@ -123,6 +123,24 @@ function Map:init()
     end
 end
 
+-- return whether a given tile is collidable
+function Map:collides(tile)
+    -- define our collidable tiles
+    local collidables = {
+        TILE_BRICK, JUMP_BLOCK, JUMP_BLOCK_HIT,
+        MUSHROOM_TOP, MUSHROOM_BOTTOM
+    }
+
+    -- iterate and return true if our tile type matches
+    for _, v in ipairs(collidables) do
+        if tile.id == v then
+            return true
+        end
+    end
+
+    return false
+end
+
 function Map:update(dt)
     self.camX = math.max(0,
         math.min(self.player.x - VIRTUAL_WIDTH / 2,
