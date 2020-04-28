@@ -89,13 +89,13 @@ function Player:init(map)
                 self.state = 'jumping'
                 self.animation = self.animations['jumping']
                 self.sounds['jump']:play()
-            elseif love.keyboard.isDown('left') then
+            elseif love.keyboard.isDown('a') then
                 self.direction = 'left'
                 self.dx = -WALKING_SPEED
                 self.state = 'walking'
                 self.animations['walking']:restart()
                 self.animation = self.animations['walking']
-            elseif love.keyboard.isDown('right') then
+            elseif love.keyboard.isDown('d') then
                 self.direction = 'right'
                 self.dx = WALKING_SPEED
                 self.state = 'walking'
@@ -114,10 +114,10 @@ function Player:init(map)
                 self.state = 'jumping'
                 self.animation = self.animations['jumping']
                 self.sounds['jump']:play()
-            elseif love.keyboard.isDown('left') then
+            elseif love.keyboard.isDown('a') then
                 self.direction = 'left'
                 self.dx = -WALKING_SPEED
-            elseif love.keyboard.isDown('right') then
+            elseif love.keyboard.isDown('d') then
                 self.direction = 'right'
                 self.dx = WALKING_SPEED
             else
@@ -145,10 +145,10 @@ function Player:init(map)
                 return
             end
 
-            if love.keyboard.isDown('left') then
+            if love.keyboard.isDown('a') then
                 self.direction = 'left'
                 self.dx = -WALKING_SPEED
-            elseif love.keyboard.isDown('right') then
+            elseif love.keyboard.isDown('d') then
                 self.direction = 'right'
                 self.dx = WALKING_SPEED
             end

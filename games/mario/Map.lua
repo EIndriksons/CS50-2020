@@ -26,6 +26,14 @@ MUSHROOM_BOTTOM = 11
 JUMP_BLOCK = 5
 JUMP_BLOCK_HIT = 9
 
+-- flagpole
+FLAG_TOP = 8
+FLAG_MIDDLE = 12
+FLAG_BOTTOM = 16
+
+-- pyramid height
+PYRAMID_HEIGHT = 4
+
 -- a speed to multiply delta time to scroll map; smooth value
 local SCROLL_SPEED = 62
 
@@ -131,6 +139,18 @@ function Map:init()
         else
             -- increment X so we skip two scanlines, creating a 2-tile gap
             x = x + 2
+        end
+    end
+
+    -- generate a flagpole
+    self:setTile(self.mapWidth - 1, self.mapHeight / 2 - 1, FLAG_BOTTOM)
+    self:setTile(self.mapWidth - 1, self.mapHeight / 2 - 2, FLAG_MIDDLE)
+    self:setTile(self.mapWidth - 1, self.mapHeight / 2 - 3, FLAG_TOP)
+
+    -- generate a brick pyramid
+    for tileWidth = 0, PYRAMID_HEIGHT do
+        for tileHeight = 0, PYRAMID_HEIGHT - tileWidth do
+            self:setTile(self.mapWidth - 4 - tileWidth, self.mapHeight / 2 - 1 - tileHeight, TILE_BRICK)
         end
     end
 
