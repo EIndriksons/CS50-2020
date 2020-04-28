@@ -50,6 +50,9 @@ function Map:init()
     self.mapHeight = 28
     self.tiles = {}
 
+    -- if the player has won
+    self.win = false
+
     -- applies positive Y influence on anything affected
     self.gravity = 15
 
@@ -177,6 +180,23 @@ function Map:collides(tile)
     return false
 end
 
+-- return whether a given tile is a flag pole
+function Map:collidesFlag(tile)
+    -- flag pole tile
+    local flagpoles = {
+        FLAG_TOP, FLAG_MIDDLE, FLAG_BOTTOM
+    }
+
+    -- iterate and return true if our tile type matches
+    for _, v in ipairs(flagpoles) do
+        if tile.id == v then
+            return true
+        end
+    end
+
+    return false
+end
+
 -- function to update camera offset with delta time
 function Map:update(dt)
     self.player:update(dt)
@@ -208,15 +228,28 @@ end
 
 -- renders our map to the screen, to be called by main's render
 function Map:render()
-    for y = 1, self.mapHeight do
-        for x = 1, self.mapWidth do
-            local tile = self:getTile(x, y)
-            if tile ~= TILE_EMPTY then
-                love.graphics.draw(self.spritesheet, self.sprites[tile],
-                    (x - 1) * self.tileWidth, (y - 1) * self.tileHeight)
+
+    -- check if player has won
+    if self.player:checkWinCondition() or self.win then
+
+        -- if player has won - display victory screen
+        love.graphics.clear(40/255, 45/255, 52/255, 255/255)
+        love.graphics.printf('You have WON the game!', 0, 20, VIRTUAL_WIDTH, 'center')
+        self.win = true
+
+    else
+
+        -- else draw everything else
+        for y = 1, self.mapHeight do
+            for x = 1, self.mapWidth do
+                local tile = self:getTile(x, y)
+                if tile ~= TILE_EMPTY then
+                    love.graphics.draw(self.spritesheet, self.sprites[tile],
+                        (x - 1) * self.tileWidth, (y - 1) * self.tileHeight)
+                end
             end
         end
+        self.player:render()
+        
     end
-
-    self.player:render()
 end

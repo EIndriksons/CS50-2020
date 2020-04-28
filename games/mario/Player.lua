@@ -129,6 +129,7 @@ function Player:init(map)
             -- check for collisions moving left and right
             self:checkRightCollision()
             self:checkLeftCollision()
+            self:checkWinCondition()
 
             -- check if there's a tile directly beneath us
             if not self.map:collides(self.map:tileAt(self.x, self.y + self.height)) and
@@ -170,6 +171,7 @@ function Player:init(map)
             -- check for collisions moving left and right
             self:checkRightCollision()
             self:checkLeftCollision()
+            self:checkWinCondition()
         end
     }
 end
@@ -249,6 +251,16 @@ function Player:checkRightCollision()
             self.dx = 0
             self.x = (self.map:tileAt(self.x + self.width, self.y).x - 1) * self.map.tileWidth - self.width
         end
+    end
+end
+
+-- checks if the Player collides with flag pole for win condition
+function Player:checkWinCondition()
+    if self.map:collidesFlag(self.map:tileAt(self.x + self.width, self.y)) or
+        self.map:collidesFlag(self.map:tileAt(self.x + self.width, self.y + self.height - 1)) then
+        return true
+    else
+        return false
     end
 end
 
